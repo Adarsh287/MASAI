@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fix Layout</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex; /* Arrange boxes in a row */
+            justify-content: center; /* Center horizontally */
+            gap: 10px; /* Space between boxes */
+            padding: 20px;
+        }
+
+        .box {
+            width: 100px;
+            height: 100px;
+            background: lightblue;
+            border: 2px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .text {
+            position: fixed;
+            left: 50%;
+            top: 10px;
+            transform: translateX(-50%);
+            background: yellow;
+            padding: 5px 10px;
+            border: 1px solid black;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Debugging Task</h1>
+    <div class="container">
+        <div class="box">Box 1</div>
+        <div class="box">Box 2</div>
+        <div class="box">Box 3</div>
+    </div>
+    <p class="text">Fix my position!</p>
+</body>
+</html>

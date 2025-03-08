@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation Bar with Combinators</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            background-color: #4a0505;
+            padding: 10px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+        .section-1 a {
+            color: red;
+        }
+        
+        .section-2 a {
+            color: green;
+        }
+
+        .section-3 a {
+            color: blue;
+        }
+
+       
+        .section > a {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        a:hover {
+            color: orange;
+        }
+
+        a:active {
+            color: yellow;
+        }
+        a[href^="https"] {
+            color: purple !important; 
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="section section-1">
+            <h3>Section 1</h3>
+            <a href="#">Home</a>
+            <div>
+                <a href="#">About</a>
+            </div>
+            <a href="https://example.com">Secure Link</a>
+        </div>
+
+        <div class="section section-2">
+            <h3>Section 2</h3>
+            <a href="#">Services</a>
+            <div>
+                <a href="#">Pricing</a>
+            </div>
+            <a href="https://secure.com">Secure Services</a>
+        </div>
+
+        <div class="section section-3">
+            <h3>Section 3</h3>
+            <a href="#">Contact</a>
+            <div>
+                <a href="#">Support</a>
+            </div>
+            <a href="https://help.com">Secure Help</a>
+        </div>
+    </nav>
+
+</body>
+</html>
