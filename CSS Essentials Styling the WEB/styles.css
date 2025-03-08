@@ -1,0 +1,88 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fff;
+}
+
+/* Header Styles */
+header {
+    background-color: #FF6347;
+    text-align: center;
+    padding: 20px;
+    color: navy;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+/* Section Styling */
+section {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: white;
+    border-radius: 5px;
+}
+
+/* About Section */
+#about img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+/* Project Section */
+.project {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.project ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Contact Section */
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input, textarea {
+    margin-bottom: 10px;
+    padding: 8px;
+    width: 100%;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 10px;
+    background-color: #FF6347;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* Footer */
+footer {
+    background-color: #FF6347;
+    text-align: center;
+    padding: 10px;
+    color: white;
+}
