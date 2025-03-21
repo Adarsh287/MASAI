@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexbox Layout</title>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            border: 2px solid black;
+            padding: 20px;
+        }
+
+        .item {
+            width: 100px;
+            height: 100px;
+            background-color: lightblue;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            font-weight: bold;
+            border: 1px solid darkblue;
+        }
+
+        .column-layout {
+            flex-direction: column; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="flexContainer">
+        <div class="item">1</div>
+        <div class="item">2</div>
+        <div class="item">3</div>
+        <div class="item">4</div>
+    </div>
+    <button onclick="toggleDirection()">Toggle Direction</button>
+    <script>
+        function toggleDirection() {
+            document.getElementById('flexContainer').classList.toggle('column-layout');
+        }
+    </script>
+</body>
+</html>
