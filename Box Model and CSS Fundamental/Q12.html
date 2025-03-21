@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Display Properties Demonstration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .box {
+            padding: 10px;
+            border: 2px solid black;
+            text-align: center;
+        }
+        .block-element {
+            display: block;
+            width: 100%;
+            background-color: lightblue;
+        }
+        .inline-element {
+            display: inline;
+            background-color: lightcoral;
+            padding: 5px;
+        }
+        .inline-block-element {
+            display: inline-block;
+            width: 150px;
+            height: 50px;
+            background-color: lightgreen;
+            margin: 5px;
+        }
+        .hidden-element {
+            display: none;
+            background-color: gray;
+            padding: 10px;
+        }
+    </style>
+    <script>
+        function toggleHidden() {
+            var hiddenBox = document.getElementById("hidden-box");
+            if (hiddenBox.style.display === "none") {
+                hiddenBox.style.display = "block";
+            } else {
+                hiddenBox.style.display = "none";
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="box block-element">Block Element - Takes full width</div>
+    <span class="box inline-element">Inline Element - Stays inline</span>
+    <div class="box inline-block-element">Inline-Block Element - Acts like both</div>
+    <div id="hidden-box" class="box hidden-element">Hidden Element - Toggle me</div>
+    <button onclick="toggleHidden()">Toggle Hidden Element</button>
+</body>
+</html>

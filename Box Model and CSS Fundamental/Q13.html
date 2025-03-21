@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticky Header & Fixed Footer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            background: #007bff;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            z-index: 1000;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #343a40;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+    <header>Sticky Header</header>
+
+    <main>
+        <div class="content">
+            <h2>Scrollable Content</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.</p>
+            <p>Sed nisi. Nulla quis sem at nibh elementum imperdiet.</p>
+            <p>Duis sagittis ipsum. Praesent mauris. Fusce nec tellus sed augue semper porta.</p>
+            <p>Morbi lectus risus, iaculis vel, suscipit quis, luctus non, massa.</p>
+            <p>Maecenas nec odio et ante tincidunt tempus.</p>
+            <p>Vestibulum volutpat pretium libero.</p>
+            <p>Cras id dui. Aenean ut eros et nisl sagittis vestibulum.</p>
+            <p>Fusce pharetra convallis urna.</p>
+            <p>Quisque ut nisi. Donec mi odio, faucibus at, scelerisque quis, convallis in, nisi.</p>
+        </div>
+    </main>
+
+    <footer>Fixed Footer</footer>
+
+</body>
+</html>
