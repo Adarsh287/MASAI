@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masai Calculator</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .calculator {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .display {
+            grid-column: 1 / -1;
+            background-color: #e0e0e0;
+            padding: 20px;
+            text-align: right;
+            font-size: 1.5em;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .button {
+            background-color: #f0f0f0;
+            border: none;
+            padding: 15px;
+            font-size: 1.2em;
+            text-align: center;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #d0d0d0;
+        }
+        .operator {
+            background-color: #333;
+            color: white;
+        }
+        .operator:hover {
+            background-color: #555;
+        }
+        .clear {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .clear:hover {
+            background-color: #c0392b;
+        }
+        .equals {
+            background-color: #333;
+            color: white;
+        }
+        .equals:hover {
+            background-color: #555;
+        }
+        .zero {
+            grid-column: 2 / 3;
+        }
+        h1 {
+            position: absolute;
+            top: 20px;
+            font-family: sans-serif;
+            color: teal;
+        }
+    </style>
+</head>
+<body>
+    <h1>Masai Calculator</h1>
+    <div class="calculator">
+        <div class="display">0</div>
+        <button class="button">1</button>
+        <button class="button">2</button>
+        <button class="button">3</button>
+        <button class="button operator">+</button>
+        <button class="button">4</button>
+        <button class="button">5</button>
+        <button class="button">6</button>
+        <button class="button operator">-</button>
+        <button class="button">7</button>
+        <button class="button">8</button>
+        <button class="button">9</button>
+        <button class="button operator">x</button>
+        <button class="button clear">C</button>
+        <button class="button zero">0</button>
+        <button class="button equals">=</button>
+        <button class="button operator">/</button>
+    </div>
+</body>
+</html>
