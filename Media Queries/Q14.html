@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .gallery {
+            display: grid;
+            gap: 10px;
+            padding: 20px;
+        }
+
+        .gallery img {
+            width: 100%;
+            display: block;
+            border-radius: 8px;
+        }
+
+        .gallery {
+            grid-template-columns: 1fr;
+        }
+
+        @media (min-width: 768px) {
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .gallery {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="gallery">
+        <img src="image.jpg" alt="Image 1">
+        <img src="image.jpg" alt="Image 2">
+        <img src="image.jpg" alt="Image 3">
+        <img src="image.jpg" alt="Image 4 ">
+        <
+      
+    </div>
+
+</body>
+</html>
