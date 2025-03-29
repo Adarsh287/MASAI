@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interactive Div Updater</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    #myDiv {
+      width: 300px;
+      height: 150px;
+      background-color: lightgray;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 20px;
+      border-radius: 8px;
+      font-size: 18px;
+    }
+    input, button {
+      margin: 8px;
+      padding: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Div Background & Text Updater</h2>
+
+  <input type="text" id="colorInput" placeholder="Enter color name">
+  <button id="bgBtn">Change Background</button>
+  <br>
+
+  <input type="text" id="textInput" placeholder="Enter text content">
+  <button id="textBtn">Update Text</button>
+
+  <div id="myDiv">This is the initial content!</div>
+
+  <script>
+    const colorInput = document.getElementById('colorInput');
+    const textInput = document.getElementById('textInput');
+    const bgBtn = document.getElementById('bgBtn');
+    const textBtn = document.getElementById('textBtn');
+    const myDiv = document.getElementById('myDiv');
+
+    function isValidColor(color) {
+      const temp = document.createElement('div');
+      temp.style.color = color;
+      return temp.style.color !== '';
+    }
+
+    bgBtn.addEventListener('click', function () {
+      const color = colorInput.value.trim();
+      if (isValidColor(color)) {
+        myDiv.style.backgroundColor = color;
+      } else {
+        alert('Invalid color name!');
+      }
+    });
+
+    textBtn.addEventListener('click', function () {
+      const text = textInput.value.trim();
+      if (text === '') {
+        alert('Please enter some text!');
+      } else {
+        myDiv.textContent = text;
+      }
+    });
+  </script>
+
+</body>
+</html>
