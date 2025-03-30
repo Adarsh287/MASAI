@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Propagation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .outer, .middle, .inner {
+            padding: 20px;
+            margin: 10px;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+<body>
+    <div class="outer" id="outer">Outer Div
+        <div class="middle" id="middle">Middle Div
+            <div class="inner" id="inner">Inner Div
+                <button id="innerButton">Click Me</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showAlert(event, name) {
+            alert("Clicked: " + name);
+        }
+
+        document.getElementById("outer").addEventListener("click", function(event) {
+            showAlert(event, "Outer Div");
+        }, true);
+
+        document.getElementById("middle").addEventListener("click", function(event) {
+            showAlert(event, "Middle Div");
+        }, true);
+
+        document.getElementById("inner").addEventListener("click", function(event) {
+            showAlert(event, "Inner Div");
+        }, true);
+
+        document.getElementById("innerButton").addEventListener("click", function(event) {
+            showAlert(event, "Inner Button");
+            event.stopPropagation();
+        });
+    </script>
+</body>
+</html>

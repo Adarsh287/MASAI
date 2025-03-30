@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Task Manager</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; }
+    ul { list-style: none; padding: 0; }
+    li { display: flex; justify-content: space-between; padding: 5px; border-bottom: 1px solid #ccc; }
+    .completed { text-decoration: line-through; color: gray; }
+  </style>
+</head>
+<body>
+  <h2>Task Manager</h2>
+  <input id="taskInput" type="text" placeholder="Enter task">
+  <button id="addTask">Add Task</button>
+  
+  <div>
+    <button id="filterAll">All Tasks</button>
+    <button id="filterCompleted">Completed Tasks</button>
+    <button id="filterIncomplete">Incomplete Tasks</button>
+    <button id="sortTasks">Sort Alphabetically</button>
+  </div>
+  
+  <p>Total Tasks: <span id="totalCount">0</span></p>
+  <p>Completed: <span id="completedCount">0</span></p>
+  <p>Incomplete: <span id="incompleteCount">0</span></p>
+  
+  <ul id="taskList"></ul>
+
+  <script>
+    const taskInput = document.getElementById('taskInput');
+    const addTaskButton = document.getElementById('addTask');
+    const taskList = document.getElementById('taskList');
+    const totalCount = document.getElementById('totalCount');
+    const completedCount = document.getElementById('completedCount');
+    const incompleteCount = document.getElementById('incompleteCount');
+    
+    let tasks = [];
+
+    function renderTasks(filter = 'all', sort = false) {
+      let filteredTasks = tasks;
+      if (filter === 'completed') filteredTasks = tasks.filter(task => task.completed);
+      else if (filter === 'incomplete') filteredTasks = tasks.filter(task => !task.completed);
+      
+      if (sort) filteredTasks = [...filteredTasks].sort((a, b) => a.text.localeCompare(b.text));
+      
+      taskList.innerHTML = '';
+      filteredTasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        li.className = task.completed ? 'completed' : '';
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = task.completed;
+        checkbox.addEventListener('change', () => toggleTask(index));
+        
+        const textNode = document.createElement('span');
+        textNode.textContent = task.text;
+        
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete';
+        deleteButton.addEventListener('click', () => deleteTask(index));
+        
+        li.appendChild(checkbox);
+        li.appendChild(textNode);
+        li.appendChild(deleteButton);
+        taskList.appendChild(li);
+      });
+      updateCounts();
+    }
+
+    function updateCounts() {
+      totalCount.textContent = tasks.length;
+      completedCount.textContent = tasks.filter(task => task.completed).length;
+      incompleteCount.textContent = tasks.filter(task => !task.completed).length;
+    }
+
+    function addTask() {
+      const taskText = taskInput.value.trim();
+      if (!taskText) return;
+      tasks.push({ text: taskText, completed: false });
+      taskInput.value = '';
+      renderTasks();
+    }
+    
+    function deleteTask(index) {
+      tasks.splice(index, 1);
+      renderTasks();
+    }
+    
+    function toggleTask(index) {
+      tasks[index].completed = !tasks[index].completed;
+      renderTasks();
+    }
+    
+    addTaskButton.addEventListener('click', addTask);
+    document.getElementById('filterAll').addEventListener('click', () => renderTasks('all'));
+    document.getElementById('filterCompleted').addEventListener('click', () => renderTasks('completed'));
+    document.getElementById('filterIncomplete').addEventListener('click', () => renderTasks('incomplete'));
+    document.getElementById('sortTasks').addEventListener('click', () => renderTasks('all', true));
+  </script>
+</body>
+</html>

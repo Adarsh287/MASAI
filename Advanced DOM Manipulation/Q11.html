@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Paragraphs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <button id="addBtn">Add Paragraph</button>
+    <button id="removeBtn">Remove Last Paragraph</button>
+    <div id="container"></div>
+
+    <script>
+        document.getElementById("addBtn").addEventListener("click", function() {
+            let p = document.createElement("p");
+            p.textContent = "This is a new paragraph.";
+            document.getElementById("container").appendChild(p);
+        });
+
+        document.getElementById("removeBtn").addEventListener("click", function() {
+            let container = document.getElementById("container");
+            if (container.lastChild) {
+                container.removeChild(container.lastChild);
+            }
+        });
+    </script>
+</body>
+</html>
