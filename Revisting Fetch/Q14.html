@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; text-align: center; }
+        input, button { padding: 10px; margin: 10px; }
+        button { background: blue; color: white; border: none; cursor: pointer; }
+        button:hover { background: darkblue; }
+        #weather { margin-top: 20px; font-size: 18px; }
+        .error { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h2>Weather App</h2>
+    <form id="weatherForm">
+        <input type="text" id="city" placeholder="Enter city name" required>
+        <button type="submit">Get Weather</button>
+    </form>
+
+    <div id="weather"></div>
+
+    <script>
+        const weatherForm = document.getElementById('weatherForm');
+        const cityInput = document.getElementById('city');
+        const weatherDisplay = document.getElementById('weather');
+        const API_KEY = 'https://api.openweathermap.org/data/2.5/weather';
+
+        weatherForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const city = cityInput.value.trim();
+            if (city === "") {
+                displayMessage("⚠️ Please enter a city name!", true);
+                return;
+            }
+            fetchWeather(city);
+        });
+
+        async function fetchWeather(city) {
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${API_KEY}`;
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error("City not found or invalid request");
+                }
+                const data = await response.json();
+                displayWeather(data);
+            } catch (error) {
+                displayMessage("⚠️ Error: " + error.message, true);
+                console.error("Fetch error:", error);
+            }
+        }
+
+        function displayWeather(data) {
+            weatherDisplay.innerHTML = `
+                <h3>Weather in ${data.name}, ${data.sys.country}</h3>
+                <p><strong>Temperature:</strong> ${data.main.temp}°C</p>
+                <p><strong>Condition:</strong> ${data.weather[0].description}</p>
+            `;
+        }
+
+        function displayMessage(message, isError = false) {
+            weatherDisplay.innerHTML = `<p class="${isError ? 'error' : ''}">${message}</p>`;
+        }
+    </script>
+
+</body>
+</html>

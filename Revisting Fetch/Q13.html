@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Listing</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h2 { text-align: center; }
+        .container { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px; }
+        .product { border: 1px solid #ddd; padding: 10px; text-align: center; border-radius: 5px; background: #fff; }
+        .product img { width: 100px; height: 100px; object-fit: contain; }
+        .product h3 { font-size: 16px; margin: 10px 0; }
+        .price { font-weight: bold; color: green; }
+        .view-btn { padding: 8px 10px; background: blue; color: white; border: none; cursor: pointer; margin-top: 10px; }
+        .view-btn:hover { background: darkblue; }
+        .error-message { color: red; text-align: center; font-size: 18px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <h2>Product Listing</h2>
+    <div id="productContainer" class="container"></div>
+    <div id="errorMessage" class="error-message"></div>
+
+    <script>
+        async function fetchProducts() {
+            try {
+                const response = await fetch("https://fakestoreapi.com/products");
+                if (!response.ok) {
+                    throw new Error("Failed to fetch products");
+                }
+
+                const products = await response.json();
+                displayProducts(products);
+            } catch (error) {
+                document.getElementById("errorMessage").textContent = "⚠️ Failed to fetch products. Please try again later.";
+                console.error("Error fetching products:", error);
+            }
+        }
+
+        function displayProducts(products) {
+            const container = document.getElementById("productContainer");
+            container.innerHTML = "";
+
+            products.forEach(product => {
+                const productCard = document.createElement("div");
+                productCard.classList.add("product");
+
+                productCard.innerHTML = `
+                    <img src="${product.image}" alt="${product.title}">
+                    <h3>${product.title}</h3>
+                    <p class="price">$${product.price}</p>
+                    <button class="view-btn" onclick="alert('Product ID: ${product.id}\\n${product.title}')">View Details</button>
+                `;
+
+                container.appendChild(productCard);
+            });
+        }
+
+        window.onload = fetchProducts;
+    </script>
+
+</body>
+</html>
