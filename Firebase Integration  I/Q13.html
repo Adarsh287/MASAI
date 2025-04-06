@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase User Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        #user-table-container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .edit-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-size: 0.8em;
+        }
+        #edit-form-container {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: none; /* Hidden by default */
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+        #update-btn {
+            padding: 10px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        #cancel-edit-btn {
+            padding: 10px 15px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .message {
+            margin-top: 10px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .success {
+            color: green;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+</head>
+<body>
+    <h1>Firebase User Data</h1>
+
+    <div id="user-table-container">
+        <h2>User List</h2>
+        <table id="user-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="user-list">
+            </tbody>
+        </table>
+        <div id="user-list-message" class="message"></div>
+    </div>
+
+    <div id="edit-form-container">
+        <h2>Edit User</h2>
+        <form id="editUserForm">
+            <input type="hidden" id="editUserId">
+            <div>
+                <label for="editName">Name:</label>
+                <input type="text" id="editName" required>
+            </div>
+            <div>
+                <label for="editEmail">Email:</label>
+                <input type="email" id="editEmail" required>
+            </div>
+            <button type="submit" id="update-btn">Update User</button>
+            <button type="button" id="cancel-edit-btn">Cancel</button>
+        </form>
+        <div id="edit-form-message" class="message"></div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+          apiKey: "YOUR_API_KEY",
+          authDomain: "masai-80900.firebaseapp.com",
+          databaseURL: "https://masai-80900-default-rtdb.asia-southeast1.firebasedatabase.app/",
+          projectId: "masai-80900",
+          storageBucket: "masai-80900.appspot.com",
+          messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+          appId: "YOUR_APP_ID"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const usersRef = database.ref('users');
+        const userListElement = document.getElementById('user-list');
+        const userListMessage = document.getElementById('user-list-message');
+        const editFormContainer = document.getElementById('edit-form-container');
+        const editUserForm = document.getElementById('editUserForm');
+        const editUserIdInput = document.getElementById('editUserId');
+        const editNameInput = document.getElementById('editName');
+        const editEmailInput = document.getElementById('editEmail');
+        const editFormMessage = document.getElementById('edit-form-message');
+        const cancelEditBtn = document.getElementById('cancel-edit-btn');
+
+        let currentUsers = {};
+
+        function fetchUsers() {
+            usersRef.get()
+                .then((snapshot) => {
+                    if (snapshot.exists()) {
+                        currentUsers = snapshot.val();
+                        renderUserTable(currentUsers);
+                        userListMessage.textContent = '';
+                    } else {
+                        userListElement.innerHTML = '<tr><td colspan="3">No users found.</td></tr>';
+                        userListMessage.textContent = '';
+                    }
+                })
+                .catch((error) => {
+                    console.error("Error fetching data:", error);
+                    userListMessage.textContent = `Error fetching data: ${error.message}`;
+                    userListElement.innerHTML = '';
+                });
+        }
+
+        function renderUserTable(usersData) {
+            userListElement.innerHTML = '';
+            for (const userId in usersData) {
+                if (usersData.hasOwnProperty(userId)) {
+                    const user = usersData[userId];
+                    const row = userListElement.insertRow();
+                    const nameCell = row.insertCell();
+                    const emailCell = row.insertCell();
+                    const actionsCell = row.insertCell();
+
+                    nameCell.textContent = user.name;
+                    emailCell.textContent = user.email;
+
+                    const editButton = document.createElement('button');
+                    editButton.textContent = 'Edit';
+                    editButton.className = 'edit-btn';
+                    editButton.dataset.userId = userId;
+                    editButton.addEventListener('click', () => openEditForm(userId, user));
+                    actionsCell.appendChild(editButton);
+                }
+            }
+        }
+
+        function openEditForm(userId, userData) {
+            editUserIdInput.value = userId;
+            editNameInput.value = userData.name;
+            editEmailInput.value = userData.email;
+            editFormMessage.textContent = '';
+            editFormContainer.style.display = 'block';
+            document.getElementById('user-table-container').style.display = 'none';
+        }
+
+        cancelEditBtn.addEventListener('click', () => {
+            editFormContainer.style.display = 'none';
+            document.getElementById('user-table-container').style.display = 'block';
+        });
+
+        editUserForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const userId = editUserIdInput.value;
+            const updatedName = editNameInput.value.trim();
+            const updatedEmail = editEmailInput.value.trim();
+
+            if (updatedName && updatedEmail) {
+                const updates = {};
+                updates[`/users/${userId}/name`] = updatedName;
+                updates[`/users/${userId}/email`] = updatedEmail;
+
+                database.ref().update(updates)
+                    .then(() => {
+                        editFormMessage.textContent = 'User updated successfully!';
+                        editFormMessage.className = 'message success';
+                        editFormContainer.style.display = 'none';
+                        document.getElementById('user-table-container').style.display = 'block';
+                        fetchUsers(); 
+                    })
+                    .catch((error) => {
+                        console.error("Error updating user:", error);
+                        editFormMessage.textContent = `Error updating user: ${error.message}`;
+                        editFormMessage.className = 'message error';
+                    });
+            } else {
+                editFormMessage.textContent = 'Please enter both name and email.';
+                editFormMessage.className = 'message error';
+            }
+        });
+
+        fetchUsers(); // Initial fetch
+    </script>
+</body>
+</html>
