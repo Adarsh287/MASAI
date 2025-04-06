@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Pagination</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 30px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    #user-list {
+      max-width: 700px;
+      margin: 30px auto;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .user {
+      border-bottom: 1px solid #ccc;
+      padding: 12px 0;
+    }
+    .user:last-child {
+      border-bottom: none;
+    }
+    #pagination {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    #pagination button {
+      padding: 8px 14px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #pagination button.active {
+      background: #0056b3;
+    }
+    #error {
+      text-align: center;
+      color: red;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Paginated Users</h1>
+<div id="user-list"></div>
+<div id="pagination"></div>
+<div id="error"></div>
+
+<script>
+  const API_URL = "https://jsonplaceholder.typicode.com/users";
+  const userList = document.getElementById("user-list");
+  const pagination = document.getElementById("pagination");
+  const errorDiv = document.getElementById("error");
+
+  const USERS_PER_PAGE = 6;
+  const TOTAL_USERS = 10;
+  const TOTAL_PAGES = Math.ceil(TOTAL_USERS / USERS_PER_PAGE);
+  let currentPage = 1;
+
+  async function fetchUsers(page = 1) {
+    try {
+      errorDiv.textContent = "";
+      const res = await fetch(`${API_URL}?_page=${page}&_limit=${USERS_PER_PAGE}`);
+      if (!res.ok) throw new Error("Failed to fetch user data.");
+      const users = await res.json();
+      renderUsers(users);
+      highlightButton(page);
+    } catch (error) {
+      errorDiv.textContent = error.message;
+    }
+  }
+
+  function renderUsers(users) {
+    userList.innerHTML = "";
+    users.forEach(user => {
+      const div = document.createElement("div");
+      div.className = "user";
+      div.innerHTML = `
+        <strong>${user.name}</strong><br>
+        <small>Email:</small> ${user.email}<br>
+        <small>Company:</small> ${user.company.name}
+      `;
+      userList.appendChild(div);
+    });
+  }
+
+  function createPaginationButtons() {
+    pagination.innerHTML = "";
+    for (let i = 1; i <= TOTAL_PAGES; i++) {
+      const btn = document.createElement("button");
+      btn.textContent = i;
+      btn.addEventListener("click", () => {
+        currentPage = i;
+        fetchUsers(currentPage);
+      });
+      pagination.appendChild(btn);
+    }
+  }
+
+  function highlightButton(page) {
+    const buttons = pagination.querySelectorAll("button");
+    buttons.forEach(btn => {
+      btn.classList.remove("active");
+      if (parseInt(btn.textContent) === page) {
+        btn.classList.add("active");
+      }
+    });
+  }
+
+  createPaginationButtons();
+  fetchUsers(currentPage);
+</script>
+
+</body>
+</html>

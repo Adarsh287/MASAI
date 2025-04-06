@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Todo Pagination App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #todo-list {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .todo {
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+    }
+    .todo:last-child {
+      border-bottom: none;
+    }
+    .completed {
+      color: green;
+    }
+    .not-completed {
+      color: red;
+    }
+    #pagination {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    #pagination button {
+      padding: 8px 12px;
+      cursor: pointer;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+    #pagination button.active {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <h1>Todo List</h1>
+  <div id="todo-list"></div>
+  <div id="pagination"></div>
+
+  <script>
+    const todoList = document.getElementById("todo-list");
+    const pagination = document.getElementById("pagination");
+    const TODOS_PER_PAGE = 10;
+    let currentPage = 1;
+    let todos = [];
+
+    async function fetchTodos() {
+      const res = await fetch("https://jsonplaceholder.typicode.com/todos");
+      todos = await res.json();
+      renderPage(currentPage);
+      createPaginationButtons();
+    }
+
+    function renderPage(page) {
+      currentPage = page;
+      todoList.innerHTML = "";
+      const start = (page - 1) * TODOS_PER_PAGE;
+      const end = start + TODOS_PER_PAGE;
+      const currentTodos = todos.slice(start, end);
+      currentTodos.forEach(todo => {
+        const div = document.createElement("div");
+        div.className = "todo";
+        div.innerHTML = `
+          <strong>${todo.title}</strong>
+          <div class="${todo.completed ? 'completed' : 'not-completed'}">
+            ${todo.completed ? "Completed" : "Not Completed"}
+          </div>
+        `;
+        todoList.appendChild(div);
+      });
+      updateActiveButton();
+    }
+
+    function createPaginationButtons() {
+      pagination.innerHTML = "";
+      const totalPages = Math.ceil(todos.length / TODOS_PER_PAGE);
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.textContent = i;
+        btn.addEventListener("click", () => renderPage(i));
+        pagination.appendChild(btn);
+      }
+    }
+
+    function updateActiveButton() {
+      const buttons = pagination.querySelectorAll("button");
+      buttons.forEach(btn => {
+        btn.classList.remove("active");
+        if (parseInt(btn.textContent) === currentPage) {
+          btn.classList.add("active");
+        }
+      });
+    }
+
+    fetchTodos();
+  </script>
+</body>
+</html>
