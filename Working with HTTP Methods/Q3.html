@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>User Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        form input {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: teal;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            padding: 10px;
+            background-color: #eee;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>User Dashboard</h1>
+
+        <form id="userForm">
+            <input type="text" id="name" placeholder="Name" required />
+            <input type="email" id="email" placeholder="Email" required />
+            <button type="submit">Add User</button>
+        </form>
+
+        <h2>All Users</h2>
+        <ul id="userList"></ul>
+    </div>
+
+    <script>
+        const API_URL = 'https://67f2907fec56ec1a36d37b4b.mockapi.io/api/users/';
+        const userList = document.getElementById('userList');
+        const form = document.getElementById('userForm');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+
+        let users = [];
+
+        async function fetchUsers() {
+            try {
+                const response = await fetch(API_URL);
+                users = await response.json();
+                renderUsers();
+            } catch (error) {
+                alert('Failed to fetch users.');
+                console.error(error);
+            }
+        }
+        function renderUsers() {
+            userList.innerHTML = '';
+            users.forEach(user => {
+                const li = document.createElement('li');
+                li.textContent = `${user.name} - ${user.email}`;
+                userList.appendChild(li);
+            });
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = nameInput.value.trim();
+            const email = emailInput.value.trim();
+
+            const isDuplicate = users.some(user => user.email === email);
+            if (isDuplicate) {
+                alert('User with this email already exists!');
+                return;
+            }
+
+            const newUser = { name, email };
+
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(newUser)
+                });
+                const createdUser = await res.json();
+                users.push(createdUser);
+                renderUsers();
+                form.reset();
+            } catch (error) {
+                alert('Failed to add user.');
+                console.error(error);
+            }
+        });
+
+        fetchUsers();
+    </script>
+</body>
+</html>

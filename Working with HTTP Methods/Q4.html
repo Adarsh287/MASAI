@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Manager</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    h1 {
+      text-align: center;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      background: #e9e9e9;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    button {
+      margin-left: 5px;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    .edit-form {
+      display: flex;
+      gap: 10px;
+    }
+    select, input[type="text"] {
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Task Manager</h1>
+    <ul id="taskList"></ul>
+  </div>
+
+  <script>
+    const API_URL = 'https://67f2907fec56ec1a36d37b4b.mockapi.io/api/users/'; 
+    const taskList = document.getElementById('taskList');
+
+    let tasks = [];
+
+    async function fetchTasks() {
+      try {
+        const res = await fetch(API_URL);
+        tasks = await res.json();
+        renderTasks();
+      } catch (err) {
+        alert('Failed to load tasks.');
+        console.error(err);
+      }
+    }
+
+    function renderTasks() {
+      taskList.innerHTML = '';
+      tasks.forEach(task => {
+        const li = document.createElement('li');
+
+        const info = document.createElement('span');
+        info.innerText = `${task.title} [${task.status}]`;
+
+        const editBtn = document.createElement('button');
+        editBtn.textContent = 'Edit';
+        editBtn.onclick = () => showEditForm(task, li);
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.onclick = () => deleteTask(task.id);
+
+        li.append(info, editBtn, deleteBtn);
+        taskList.appendChild(li);
+      });
+    }
+
+    function showEditForm(task, liElement) {
+      const form = document.createElement('form');
+      form.className = 'edit-form';
+
+      const titleInput = document.createElement('input');
+      titleInput.type = 'text';
+      titleInput.value = task.title;
+
+      const statusSelect = document.createElement('select');
+      ['Pending', 'Completed'].forEach(status => {
+        const option = document.createElement('option');
+        option.value = status;
+        option.textContent = status;
+        if (task.status === status) option.selected = true;
+        statusSelect.appendChild(option);
+      });
+
+      const saveBtn = document.createElement('button');
+      saveBtn.textContent = 'Save';
+
+      form.append(titleInput, statusSelect, saveBtn);
+
+      form.onsubmit = async (e) => {
+        e.preventDefault();
+        await updateTask(task.id, titleInput.value, statusSelect.value);
+      };
+
+      liElement.innerHTML = '';
+      liElement.appendChild(form);
+    }
+
+    async function updateTask(id, newTitle, newStatus) {
+      try {
+        const res = await fetch(`${API_URL}/${id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: newTitle, status: newStatus })
+        });
+        const updatedTask = await res.json();
+        tasks = tasks.map(t => (t.id === id ? updatedTask : t));
+        renderTasks();
+      } catch (err) {
+        alert('Failed to update task.');
+        console.error(err);
+      }
+    }
+
+    async function deleteTask(id) {
+      const confirmDelete = confirm('Are you sure you want to delete this task?');
+      if (!confirmDelete) return;
+
+      try {
+        await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+        tasks = tasks.filter(t => t.id !== id);
+        renderTasks();
+      } catch (err) {
+        alert('Failed to delete task.');
+        console.error(err);
+      }
+    }
+
+    fetchTasks();
+  </script>
+</body>
+</html>
