@@ -1,0 +1,32 @@
+{
+    "books": [
+      {
+        "id": 1,
+        "title": "Dune",
+        "author": "Frank Herbert",
+        "genre": "Science Fiction",
+        "publishedYear": 1965,
+        "available": true},
+      {
+        "id": 2,
+        "title": "1984",
+        "author": "George Orwell",
+        "genre": "Dystopian",
+        "publishedYear": 1949,
+        "available": false}
+    ],
+    "members": [
+      {
+        "id": 1,
+        "name": "John Doe",
+        "membershipDate": "2023-01-15",
+        "active": true},
+      {
+        "id": 2,
+        "name": "Jane Smith",
+        "membershipDate": "2022-05-23",
+        "active": false}
+    ]
+  }
+  
+  
