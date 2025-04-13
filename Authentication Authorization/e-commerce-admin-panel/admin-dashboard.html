@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head><title>Admin Dashboard</title></head>
+<body>
+  <h2>Admin Dashboard</h2>
+  <div>
+    <input type="text" id="title" placeholder="Title">
+    <input type="number" id="price" placeholder="Price">
+    <input type="text" id="image" placeholder="Image URL">
+    <button onclick="addProduct()">Add Product</button>
+  </div>
+  <div id="productList"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="firebase-config.js"></script>
+  <script>
+    const role = sessionStorage.getItem("role");
+    if (role !== "admin") {
+      window.location.href = "user-dashboard.html";
+    }
+
+    function addProduct() {
+      const title = document.getElementById("title").value;
+      const price = document.getElementById("price").value;
+      const image = document.getElementById("image").value;
+      const id = Date.now();
+      db.ref("products/" + id).set({ title, price, image });
+    }
+
+    db.ref("products").on("value", snapshot => {
+      const data = snapshot.val();
+      const container = document.getElementById("productList");
+      container.innerHTML = "";
+      for (let id in data) {
+        const item = data[id];
+        container.innerHTML += `
+          <div>
+            <img src="${item.image}" width="100">
+            <h3>${item.title}</h3>
+            <p>$${item.price}</p>
+            <button onclick="editProduct('${id}')">Edit</button>
+            <button onclick="deleteProduct('${id}')">Delete</button>
+          </div>
+        `;
+      }
+    });
+
+    function deleteProduct(id) {
+      db.ref("products/" + id).remove();
+    }
+
+    function editProduct(id) {
+      const title = prompt("New Title");
+      const price = prompt("New Price");
+      const image = prompt("New Image URL");
+      db.ref("products/" + id).update({ title, price, image });
+    }
+  </script>
+</body>
+</html>

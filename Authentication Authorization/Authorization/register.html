@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+</head>
+<body>
+  <h2>Register</h2>
+  <input type="text" id="name" placeholder="Name" required />
+  <input type="email" id="email" placeholder="Email" required />
+  <input type="password" id="password" placeholder="Password" required />
+  <button onclick="register()">Register</button>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="firebase-config.js"></script>
+  <script>
+    function register() {
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const userId = Date.now();
+
+      db.ref('users/' + userId).set({
+        name,
+        email,
+        password
+      }, (error) => {
+        if (error) {
+          alert("Registration failed!");
+        } else {
+          alert("Registration Successful! Please log in.");
+          window.location.href = "login.html";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

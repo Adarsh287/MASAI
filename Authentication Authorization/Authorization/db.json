@@ -1,0 +1,16 @@
+{
+    "users": {
+      "userID1": {
+        "name": "John Doe",
+        "email": "johndoe@example.com",
+        "password": "123456"
+      },
+      "userID2": {
+        "name": "Jane Doe",
+        "email": "janedoe@example.com",
+        "password": "abcdef"
+      }
+    }
+  }
+  
+  

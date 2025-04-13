@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head><title>User Dashboard</title></head>
+<body>
+  <h2>User Dashboard</h2>
+  <div id="productList"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="firebase-config.js"></script>
+  <script>
+    const role = sessionStorage.getItem("role");
+    if (role !== "user") {
+      window.location.href = "admin-dashboard.html";
+    }
+
+    db.ref("products").on("value", snapshot => {
+      const data = snapshot.val();
+      const container = document.getElementById("productList");
+      container.innerHTML = "";
+      for (let id in data) {
+        const item = data[id];
+        container.innerHTML += `
+          <div>
+            <img src="${item.image}" width="100">
+            <h3>${item.title}</h3>
+            <p>$${item.price}</p>
+          </div>
+        `;
+      }
+    });
+  </script>
+</body>
+</html>
