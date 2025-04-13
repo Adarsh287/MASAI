@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Throttled Image Slider</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .slider-container {
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      max-width: 650px;
+    }
+
+    img {
+      width: 600px;
+      height: 400px;
+      border-radius: 10px;
+      object-fit: cover;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+    .buttons {
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px 18px;
+      font-size: 16px;
+      margin: 0 10px;
+      border: none;
+      border-radius: 5px;
+      background: #007bff;
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    #slide-number {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: 500;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slider-container">
+    <img id="slider-image" src="https://picsum.photos/600/400?random=1" alt="Slider Image">
+    <div class="buttons">
+      <button id="prevBtn">Previous</button>
+      <button id="nextBtn">Next</button>
+    </div>
+    <div id="slide-number">Slide #1</div>
+  </div>
+
+  <script>
+    const img = document.getElementById('slider-image');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const slideText = document.getElementById('slide-number');
+
+    let slideNumber = 1;
+    let lastClickTime = 0;
+    let clickCount = 0;
+
+    function updateImage() {
+      img.src = `https://picsum.photos/600/400?random=${Date.now()}`;
+      slideText.innerText = `Slide #${slideNumber}`;
+    }
+
+    function handleClick(change) {
+      const now = Date.now();
+
+      if (now - lastClickTime < 1000) {
+        clickCount++;
+        if (clickCount > 3) {
+          alert("Chill chill, loading it!!");
+          return;
+        }
+        return;
+      }
+
+      clickCount = 1;
+      lastClickTime = now;
+
+      slideNumber += change;
+      if (slideNumber < 1) slideNumber = 1;
+
+      updateImage();
+    }
+
+    nextBtn.addEventListener('click', () => handleClick(1));
+    prevBtn.addEventListener('click', () => handleClick(-1));
+  </script>
+
+</body>
+</html>

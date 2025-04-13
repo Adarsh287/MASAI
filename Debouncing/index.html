@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Debounced Movie Search</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 30px;
+      background: #f2f2f2;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    #results {
+      list-style: none;
+      padding: 0;
+    }
+
+    #results li {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    #results li:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Search Movies 🎬</h2>
+    <input type="text" id="searchInput" placeholder="Type a movie name..." />
+    <ul id="results"></ul>
+  </div>
+
+  <script>
+    const API_KEY = "https://www.omdbapi.com/?apikey=YOUR_API_KEY&s=SEARCH_QUERY"
+;
+    const searchInput = document.getElementById("searchInput");
+    const results = document.getElementById("results");
+
+    let debounceTimer;
+
+    searchInput.addEventListener("input", () => {
+      clearTimeout(debounceTimer);
+
+      debounceTimer = setTimeout(() => {
+        const query = searchInput.value.trim();
+
+        if (query !== "") {
+          searchMovies(query);
+        } else {
+          results.innerHTML = "";
+        }
+      }, 500);
+    });
+
+    async function searchMovies(query) {
+      try {
+        const res = await fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&s=${query}`);
+        const data = await res.json();
+
+        if (data.Response === "True") {
+          displayResults(data.Search);
+        } else {
+          results.innerHTML = `<li>No movies found!</li>`;
+        }
+      } catch (error) {
+        results.innerHTML = `<li>Error fetching data.</li>`;
+        console.error("Fetch Error:", error);
+      }
+    }
+
+    function displayResults(movies) {
+      results.innerHTML = "";
+      movies.forEach(movie => {
+        const li = document.createElement("li");
+        li.textContent = `${movie.Title} (${movie.Year})`;
+        results.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>
